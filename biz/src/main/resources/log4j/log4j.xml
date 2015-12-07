@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration>
+    <appender name="console" class="org.apache.log4j.ConsoleAppender">
+        <param name="Target" value="System.out"/>
+        <param name="Threshold" value="INFO"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{ABSOLUTE} %-5p [%c{1}] %m%n"/>
+        </layout>
+    </appender>
+
+    <appender name="file" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="File" value="../logs/deji-app.log"/>
+        <param name="Append" value="true"/>
+        <param name="DatePattern" value="'.'yyyy-MM-dd'.log'"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d %-5p [%c] %m%n"/>
+        </layout>
+    </appender>
+
+    <appender name="ERROR_LOG" class="org.apache.log4j.DailyRollingFileAppender">
+        <errorHandler class="org.apache.log4j.helpers.OnlyOnceErrorHandler"/>
+        <param name="File" value="../logs/error.log"/>
+        <param name="Append" value="true"/>
+        <!-- 指定日志输出级别 -->
+        <param name="Threshold" value="INFO"/>
+        <param name="DatePattern" value="'.'yyyy-MM-dd'.log'"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d %-5p [%c] %m%n"/>
+        </layout>
+    </appender>
+
+    <!-- 将名称为DSErrorLog的logger，输出到“EEROR_LOG”的appender
+         所谓logger的名字也就是，在定义Logger时，构造函数的参数
+          Logger log = Logger.getLogger("DSErrorLog");
+    -->
+    <logger name="errorLog" additivity="false">
+        <level class="org.apache.log4j.Level" value="DEBUG"/>
+        <appender-ref ref="ERROR_LOG"/>
+    </logger>
+
+    <!--
+       输出指定类包中的日志，比如想输出
+        Hibernate运行中生成的SQL语句，可作如下设置
+     -->
+    <!--<category name="org.hibernate.SQL">-->
+        <!--<priority value="DEBUG"/>-->
+        <!--&lt;!&ndash;-->
+            <!--如果指定一个appender,这些log将被输出到指定的appender-->
+            <!--如：<appender-ref ref="myFile"/>-->
+            <!--否则将作用于所有的appender-->
+         <!--&ndash;&gt;-->
+    <!--</category>-->
+
+    <!--
+      根默认会自动构建一个 root,输出INFO级别的日志到控制台，供logger继承
+     -->
+    <root>
+        <priority value ="INFO"/>
+        <appender-ref ref="console"/>
+        <appender-ref ref="file"/>
+    </root>
+</log4j:configuration>
